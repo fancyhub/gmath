@@ -111,13 +111,13 @@ func (v3 *Vector3) IsValid() bool {
 
 //========================
 
-func V3Lerp(a Vector3, b Vector3, t float32) Vector3 {
-	t = F32Clamp(t, 0, 1)
-	return Vector3{a.X + (b.X-a.X)*t, a.Y + (b.Y-a.Y)*t, a.Z + (b.Z-a.Z)*t}
+func V3Lerp(from Vector3, to Vector3, t float32) Vector3 {
+	t = F32Clamp01(t)
+	return Vector3{from.X + (to.X-from.X)*t, from.Y + (to.Y-from.Y)*t, from.Z + (to.Z-from.Z)*t}
 }
 
-func V3LerpUnclamped(a Vector3, b Vector3, t float32) Vector3 {
-	return Vector3{a.X + (b.X-a.X)*t, a.Y + (b.Y-a.Y)*t, a.Z + (b.Z-a.Z)*t}
+func V3LerpUnclamped(from Vector3, to Vector3, t float32) Vector3 {
+	return Vector3{from.X + (to.X-from.X)*t, from.Y + (to.Y-from.Y)*t, from.Z + (to.Z-from.Z)*t}
 }
 
 func V3MoveTowards(current Vector3, target Vector3, maxDistanceDelta float32) Vector3 {
