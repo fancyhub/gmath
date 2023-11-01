@@ -56,41 +56,45 @@ func (q *Quaternion) InverseSelf() bool {
 	return q.NormalizeSelf()
 }
 
-func (q *Quaternion) MultiplyV3(v Vector3) Vector3 {
-	num := q.X * 2
-	num2 := q.Y * 2
-	num3 := q.Z * 2
-	num4 := q.X * num
-	num5 := q.Y * num2
-	num6 := q.Z * num3
-	num7 := q.X * num2
-	num8 := q.X * num3
-	num9 := q.Y * num3
-	num10 := q.W * num
-	num11 := q.W * num2
-	num12 := q.W * num3
+func (q Quaternion) MultiplyV3(v Vector3) Vector3 {
+	x := q.X * 2
+	y := q.Y * 2
+	z := q.Z * 2
+
+	xx := q.X * x
+	yy := q.Y * y
+	zz := q.Z * z
+
+	xy := q.X * y
+	xz := q.X * z
+	yz := q.Y * z
+
+	wx := q.W * x
+	wy := q.W * y
+	wz := q.W * z
+
 	result := Vector3{}
-	result.X = (1-(num5+num6))*v.X + (num7-num12)*v.Y + (num8+num11)*v.Z
-	result.Y = (num7+num12)*v.X + (1-(num4+num6))*v.Y + (num9-num10)*v.Z
-	result.Z = (num8-num11)*v.X + (num9+num10)*v.Y + (1-(num4+num5))*v.Z
+	result.X = (1-(yy+zz))*v.X + (xy-wz)*v.Y + (xz+wy)*v.Z
+	result.Y = (xy+wz)*v.X + (1-(xx+zz))*v.Y + (yz-wx)*v.Z
+	result.Z = (xz-wy)*v.X + (yz+wx)*v.Y + (1-(xx+yy))*v.Z
 	return result
 }
 
-func (a *Quaternion) Dot(b Quaternion) float32 {
+func (a Quaternion) Dot(b Quaternion) float32 {
 	return a.X*b.X + a.Y*b.Y + a.Z*b.Z + a.W*b.W
 }
 
-func (q *Quaternion) Equal(q2 Quaternion) bool {
+func (q Quaternion) Equal(q2 Quaternion) bool {
 	d := q.Dot(q2)
 	return F32Equal2(d, 1.0, _QuaternionEpsilon)
 }
 
-func (q *Quaternion) IsZero() bool {
+func (q Quaternion) IsZero() bool {
 	return F32IsZero(q.X) && F32IsZero(q.Y) && F32IsZero(q.Z) && F32IsZero(q.W)
 }
 
 // ToEulerAngle YXZ, degree
-func (q *Quaternion) ToEulerAngle() Vector3 {
+func (q Quaternion) ToEulerAngle() Vector3 {
 	var eulerX, eulerY, eulerZ AngleRadian
 	xx := 2 * q.X * q.X
 	yy := 2 * q.Y * q.Y

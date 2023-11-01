@@ -203,6 +203,30 @@ func (left *Matrix4) Multiply(right *Matrix4) Matrix4 {
 	return result
 }
 
+func (matrix *Matrix4) Transpose() Matrix4 {
+	result := Matrix4{}
+	result.m00 = matrix.m00
+	result.m01 = matrix.m10
+	result.m02 = matrix.m20
+	result.m03 = matrix.m30
+
+	result.m10 = matrix.m01
+	result.m11 = matrix.m11
+	result.m12 = matrix.m21
+	result.m13 = matrix.m31
+
+	result.m20 = matrix.m02
+	result.m21 = matrix.m12
+	result.m22 = matrix.m22
+	result.m23 = matrix.m32
+
+	result.m30 = matrix.m03
+	result.m31 = matrix.m13
+	result.m32 = matrix.m23
+	result.m33 = matrix.m33
+	return result
+}
+
 // Inverse
 func (matrix *Matrix4) Inverse() Matrix4 {
 	inv := Matrix4{}

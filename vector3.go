@@ -25,10 +25,10 @@ func (v3 *Vector3) Set(x, y, z float32) {
 	v3.Z = z
 }
 
-func (v3 *Vector3) XZ() Vector2 {
+func (v3 Vector3) XZ() Vector2 {
 	return Vector2{v3.X, v3.Z}
 }
-func (v3 *Vector3) X0Z() Vector3 {
+func (v3 Vector3) X0Z() Vector3 {
 	return Vector3{v3.X, 0, v3.Z}
 }
 
@@ -42,11 +42,11 @@ func (v3 *Vector3) AddSelf(v Vector3) {
 	v3.Z += v.Z
 }
 
-func (v3 *Vector3) Substract(v Vector3) Vector3 {
+func (v3 Vector3) Substract(v Vector3) Vector3 {
 	return Vector3{v3.X - v.X, v3.Y - v.Y, v3.Z - v.Z}
 }
 
-func (v3 *Vector3) Scale(v float32) Vector3 {
+func (v3 Vector3) Scale(v float32) Vector3 {
 	return Vector3{v3.X * v, v3.Y * v, v3.Z * v}
 }
 
@@ -56,11 +56,11 @@ func (v3 *Vector3) ScaleSelf(v float32) {
 	v3.Z *= v
 }
 
-func (v3 *Vector3) ScaleV3(v Vector3) Vector3 {
+func (v3 Vector3) ScaleV3(v Vector3) Vector3 {
 	return Vector3{v3.X * v.X, v3.Y * v.X, v3.Z * v.X}
 }
 
-func (v3 *Vector3) Dot(v Vector3) float32 {
+func (v3 Vector3) Dot(v Vector3) float32 {
 	return v3.X*v.X + v3.Y*v.Y + v3.Z*v.Z
 }
 
@@ -72,18 +72,17 @@ func (v3 Vector3) Cross(v Vector3) Vector3 {
 	return temp
 }
 
-func (v3 *Vector3) Magnitude() float32 {
+func (v3 Vector3) Magnitude() float32 {
 	return F32Sqrt(v3.X*v3.X + v3.Y*v3.Y + v3.Z*v3.Z)
 }
 
-func (v3 *Vector3) SqrMagnitude() float32 {
+func (v3 Vector3) SqrMagnitude() float32 {
 	return v3.X*v3.X + v3.Y*v3.Y + v3.Z*v3.Z
 }
 
-func (v3 *Vector3) Normalize() Vector3 {
-	temp := *v3
-	temp.NormalizeSelf()
-	return temp
+func (v3 Vector3) Normalize() Vector3 {
+	v3.NormalizeSelf()
+	return v3
 }
 
 func (v3 *Vector3) NormalizeSelf() float32 {
@@ -97,15 +96,15 @@ func (v3 *Vector3) NormalizeSelf() float32 {
 	return magn
 }
 
-func (v3 *Vector3) IsZero() bool {
+func (v3 Vector3) IsZero() bool {
 	return F32IsZero(v3.SqrMagnitude())
 }
 
-func (v3 *Vector3) Equal(v Vector3) bool {
+func (v3 Vector3) Equal(v Vector3) bool {
 	return F32Equal(v3.X, v.X) && F32Equal(v3.Y, v.Y) && F32Equal(v3.Z, v.Z)
 }
 
-func (v3 *Vector3) IsValid() bool {
+func (v3 Vector3) IsValid() bool {
 	return !(math.IsNaN(float64(v3.X)) || math.IsNaN(float64(v3.Y)) || math.IsNaN(float64(v3.Z)))
 }
 
@@ -131,4 +130,46 @@ func V3MoveTowards(current Vector3, target Vector3, maxDistanceDelta float32) Ve
 	}
 	num5 := F32Sqrt(num4)
 	return Vector3{current.X + num/num5*maxDistanceDelta, current.Y + num2/num5*maxDistanceDelta, current.Z + num3/num5*maxDistanceDelta}
+}
+
+// V3Angle [0,180]
+func V3Angle(from Vector3, to Vector3) AngleDegree {
+	num := from.SqrMagnitude() * to.SqrMagnitude()
+	if num < 1e-7 {
+		return 0
+	}
+	num = F32Sqrt(num)
+
+	num2 := F32Clamp(from.Dot(to)/num, -1, 1)
+	return Acos(num2).ToDegrees()
+}
+
+// V3SignedAngle [-180,180]
+func V3SignedAngle(from, to, axis Vector3) AngleDegree {
+	num := V3Angle(from, to)
+	num2 := from.Y*to.Z - from.Z*to.Y
+	num3 := from.Z*to.X - from.X*to.Z
+	num4 := from.X*to.Y - from.Y*to.X
+	num5 := F32Sign(axis.X*num2 + axis.Y*num3 + axis.Z*num4)
+	return num * AngleDegree(num5)
+}
+
+func V3SignedAngleY(from, to Vector3) AngleDegree {
+	return V3SignedAngle(from, to, V3Up())
+}
+
+func V3Distance(from, to Vector3) float32 {
+	return to.Substract(from).Magnitude()
+}
+
+func V3DistanceSqr(from, to Vector3) float32 {
+	return to.Substract(from).SqrMagnitude()
+}
+
+func V3DistanceXZ(from, to Vector3) float32 {
+	return to.Substract(from).XZ().Magnitude()
+}
+
+func V3DistanceXZSqr(from, to Vector3) float32 {
+	return to.Substract(from).XZ().SqrMagnitude()
 }

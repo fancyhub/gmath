@@ -3,8 +3,27 @@ package gmath
 import "math"
 
 const (
-	Epsilon = math.SmallestNonzeroFloat32
+	Epsilon = 1e-5
 )
+
+func F32Sign(f float32) float32 {
+	if f >= 0 {
+		return 1
+	}
+	return -1
+}
+
+func F32Floor(v float32) float32 {
+	return float32(math.Floor(float64(v)))
+}
+
+func F32FloorToInt(v float32) int {
+	return int(math.Floor(float64(v)))
+}
+
+func F32Ceil(v float32) float32 {
+	return float32(math.Ceil(float64(v)))
+}
 
 func F32IsNaN(v float32) bool {
 	return math.IsNaN(float64(v))

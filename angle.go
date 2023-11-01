@@ -90,30 +90,30 @@ func AngleRadianDelta(from, to AngleRadian) AngleRadian {
 // AngleRadianMoveTowards return [0,TWO_PI]
 func AngleRadianMoveTowards(from AngleRadian, to AngleRadian, maxDelta AngleRadian) AngleRadian {
 	dtAngle := AngleRadianDelta(from, to)
-	if -maxDelta < dtAngle && dtAngle < maxDelta {
+	if -maxDelta <= dtAngle && dtAngle <= maxDelta {
 		return to
 	}
 	to = from + dtAngle
 
-	ret := AngleRadian(F32MoveTowards(from.ToFloat32(), to.ToFloat32(), maxDelta.ToFloat32()))
-	return ret.Normalize()
+	ret := F32MoveTowards(from.ToFloat32(), to.ToFloat32(), maxDelta.ToFloat32())
+	return AngleRadian(ret)
 }
 
 // AngleDegreeMoveTowards return [0,TWO_PI]
 func AngleDegreeMoveTowards(from AngleDegree, to AngleDegree, maxDelta AngleDegree) AngleDegree {
 	dtAngle := AngleDegreeDelta(from, to)
-	if -maxDelta < dtAngle && dtAngle < maxDelta {
+	if -maxDelta <= dtAngle && dtAngle <= maxDelta {
 		return to
 	}
 	to = from + dtAngle
-
-	ret := AngleDegree(F32MoveTowards(from.ToFloat32(), to.ToFloat32(), maxDelta.ToFloat32()))
-	return ret.Normalize()
+	ret := F32MoveTowards(from.ToFloat32(), to.ToFloat32(), maxDelta.ToFloat32())
+	return AngleDegree(ret)
 }
 
 func Sin(v AngleRadian) float32 {
 	return float32(math.Sin(float64(v)))
 }
+
 func Asin(v float32) AngleRadian {
 	return AngleRadian(math.Asin(float64(F32Clamp(v, -1, 1))))
 }
