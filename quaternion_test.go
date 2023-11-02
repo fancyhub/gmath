@@ -4,7 +4,6 @@ import "testing"
 
 func TestQuaternion(t *testing.T) {
 
-	t.Log("FA")
 	eulerAngle := Vector3{10, 20, 30}
 	eulerQuaternion := QuaternionFromEulerAngle(eulerAngle)
 	if !eulerQuaternion.Equal(Quaternion{0.12767944, 0.14487813, 0.23929833, 0.9515485}) {
